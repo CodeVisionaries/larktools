@@ -11,7 +11,9 @@ requires-python = ">=3.8"
 license = "MIT"
 keywords = []
 authors = [
-  { name = "SPRENGER Julia, NEA/SCI/DB", email = "julia.sprenger@oecd-nea.org" },
+  { name = "Julia Sprenger", email = "julia.sprenger@oecd-nea.org" },
+  { name = "Georg Schnabel", email = "g.schnabel@iaea.org" },
+  { name = "Thomas Stainer", email = "stainer.tom+gh@gmail.com" }
 ]
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -27,9 +29,9 @@ classifiers = [
 dependencies = []
 
 [project.urls]
-Documentation = "https://github.com/SPRENGER Julia, NEA/SCI/DB/larktools#readme"
-Issues = "https://github.com/SPRENGER Julia, NEA/SCI/DB/larktools/issues"
-Source = "https://github.com/SPRENGER Julia, NEA/SCI/DB/larktools"
+Documentation = "https://github.com/CodeVisionaries/larktools#readme"
+Issues = "https://github.com/CodeVisionaries/larktools/issues"
+Source = "https://github.com/CodeVisionaries/larktools"
 
 [tool.hatch.version]
 path = "src/larktools/__about__.py"
