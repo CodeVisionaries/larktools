@@ -97,7 +97,7 @@ def eval_atom(node, env):
 def eval_neg_atom(node, env):
     # the "-" character appearing in the production rule is
     # filtered out by lark by default because it is a constant
-    # character. Thereore, it doesn't appear among the child nodes
+    # character. Therefore, it doesn't appear among the child nodes
     child = get_children(node)[0]
     assert get_name(child) == "atom"
     return (-eval_atom(node, env))
