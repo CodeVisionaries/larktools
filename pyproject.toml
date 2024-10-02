@@ -32,6 +32,11 @@ Documentation = "https://github.com/CodeVisionaries/larktools#readme"
 Issues = "https://github.com/CodeVisionaries/larktools/issues"
 Source = "https://github.com/CodeVisionaries/larktools"
 
+[project.optional-dependencies]
+test = [
+  "pytest"
+]
+
 [tool.hatch.version]
 path = "src/larktools/__about__.py"
 
