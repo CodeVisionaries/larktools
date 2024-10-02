@@ -12,8 +12,6 @@ from .tree_utils import (
 def eval_arith_expr(node, env):
     child = get_children(node)[0]
     child_name = get_name(child)
-    if child_name != "sum":
-        breakpoint()
     assert child_name == "sum"
     return eval_sum(child, env)
 
@@ -99,10 +97,10 @@ def eval_atom(node, env):
 def eval_neg_atom(node, env):
     # the "-" character appearing in the production rule is
     # filtered out by lark by default because it is a constant
-    # character. Thereore, it doesn't appear among the child nodes
+    # character. Therefore, it doesn't appear among the child nodes
     child = get_children(node)[0]
     assert get_name(child) == "atom"
-    return eval_atom(node, env) 
+    return (-eval_atom(node, env))
 
 
 def eval_bracketed_arith_expr(node, env):
