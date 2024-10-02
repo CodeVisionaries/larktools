@@ -21,3 +21,7 @@ env = {"x": 10}
 res2 = eval_arith_expr(tree2, env)
 var_assign_str = ", ".join(f"{var}={val}" for var, val in env.items())
 print(f"{arith_expr2} evaluates to {res2} when using {var_assign_str}") 
+
+arith_expr3 = "5 / 5 - 3 * 6"
+tree3 = parsefun(arith_expr3)
+eval_arith_expr(tree3,{})
