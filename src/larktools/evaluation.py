@@ -12,8 +12,6 @@ from .tree_utils import (
 def eval_arith_expr(node, env):
     child = get_children(node)[0]
     child_name = get_name(child)
-    if child_name != "sum":
-        breakpoint()
     assert child_name == "sum"
     return eval_sum(child, env)
 
