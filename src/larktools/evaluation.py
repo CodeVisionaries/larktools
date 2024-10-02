@@ -100,7 +100,7 @@ def eval_neg_atom(node, env):
     # character. Thereore, it doesn't appear among the child nodes
     child = get_children(node)[0]
     assert get_name(child) == "atom"
-    return eval_atom(node, env) 
+    return (-eval_atom(node, env))
 
 
 def eval_bracketed_arith_expr(node, env):
