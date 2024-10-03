@@ -85,9 +85,8 @@ def eval_atom(node, env):
     child_name = get_name(child)
     if child_name == "INT":
         return int(get_value(child))
-    elif child_name == "VARNAME":
-        varname = get_value(child)
-        return env[varname]
+    elif child_name == "variable":
+        return eval_variable(child, env)
     elif child_name == "neg_atom":
         return eval_neg_atom(child, env)
     elif child_name == "bracketed_arith_expr":
@@ -109,3 +108,16 @@ def eval_bracketed_arith_expr(node, env):
     child = get_children(node)[0]
     assert get_name(child) == "arith_expr"
     return eval_arith_expr(child, env)
+
+
+def eval_variable(node, env):
+    children = get_children(node)
+    assert get_name(children[0]) == "VARNAME"
+    varname = get_value(children[0])
+    value = env[varname]
+    if len(children) > 1:
+        for ch in children[1:]:
+            assert get_name(ch) == "INDEX"
+            idx = int(get_value(ch))
+            value = value[idx]
+    return value
