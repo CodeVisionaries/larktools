@@ -117,15 +117,15 @@ def eval_composed_lines(node, env):
     child2 = get_children(node)[1]
     assert get_name(child1) == "arith_expr"
     eval_arith_expr(child1, env)
-    assert get_name(child2) == "multi_line"
-    return eval_multi_line(child2, env)
+    assert get_name(child2) == "multi_line_block"
+    return eval_multi_line_block(child2, env)
 
-def eval_multi_line(node, env):
+def eval_multi_line_block(node, env):
     # this can be either an arithmetic expression or 
     # composed lines
     child = get_children(node)[0]
     child_name = get_name(child)
     if child_name == "arith_expr":
-        return eval_arith_expr(child)
+        return eval_arith_expr(child, env)
     elif child_name == "composed_lines":
-        return eval_composed_lines(child)
+        return eval_composed_lines(child, env)
