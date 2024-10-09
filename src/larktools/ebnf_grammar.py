@@ -13,9 +13,8 @@ grammar = """
   //
   // The top level rule at which the matching/expansion process starts is named "start".
 
-  start: assign_var
+  start: multi_line_block
 
-  assign_var: VARNAME "=" multi_line_block
 
   VARNAME: LETTER (LETTER | DIGIT)*
 
@@ -25,9 +24,11 @@ grammar = """
   // https://lark-parser.readthedocs.io/en/stable/tree_construction.html
 
   
-  line: arith_expr
-
   multi_line_block: (line _NL? | _NL )* 
+  line: arith_expr | assignment
+
+  assignment: VARNAME "=" arith_expr
+
 
   arith_expr: sum
   sum: product | addition | subtraction 
