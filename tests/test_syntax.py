@@ -24,6 +24,9 @@ def _parse_and_assert(expression: str, expected: Union[int, float]) -> None:
     assert expected == res
 
 def test_multi_line():
-    _parse_and_assert("5\n8",8)
+    _parse_and_assert("5\n8", 8)
+    _parse_and_assert("\n\n\n8", 8)
+    _parse_and_assert("8\n\n\n", 8)
     _parse_and_assert("5+5\n3+4\n1+2", 3)
-    _parse_and_assert("\n\n5\n\n3\8", 8)
+    _parse_and_assert("\n\n5\n\n3\n8", 8)
+

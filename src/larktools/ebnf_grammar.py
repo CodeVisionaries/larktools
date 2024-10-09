@@ -24,8 +24,10 @@ grammar = """
   // but without the fancy tree shaping directives explained at 
   // https://lark-parser.readthedocs.io/en/stable/tree_construction.html
 
-  multi_line_block: arith_expr | composed_lines | _NL* multi_line_block _NL*
-  composed_lines:  arith_expr _NL multi_line_block
+  
+  line: arith_expr
+
+  multi_line_block: (line _NL? | _NL )* 
 
   arith_expr: sum
   sum: product | addition | subtraction 

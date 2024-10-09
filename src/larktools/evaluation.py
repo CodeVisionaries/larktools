@@ -110,22 +110,20 @@ def eval_bracketed_arith_expr(node, env):
     assert get_name(child) == "arith_expr"
     return eval_arith_expr(child, env)
 
-def eval_composed_lines(node, env):
-    # the newline break does not appear as child node
-    # return only the result of the latter evaluation
-    child1 = get_children(node)[0]
-    child2 = get_children(node)[1]
-    assert get_name(child1) == "arith_expr"
-    eval_arith_expr(child1, env)
-    assert get_name(child2) == "multi_line_block"
-    return eval_multi_line_block(child2, env)
-
-def eval_multi_line_block(node, env):
-    # this can be either an arithmetic expression or 
-    # composed lines
+def eval_line(node, env):
+    # this is the content of a single line of input
     child = get_children(node)[0]
     child_name = get_name(child)
     if child_name == "arith_expr":
         return eval_arith_expr(child, env)
-    elif child_name == "composed_lines":
-        return eval_composed_lines(child, env)
+
+def eval_multi_line_block(node, env):
+    # this can be either an arithmetic expression or 
+    # composed lines
+    children = get_children(node)
+    for child in children:
+        child_name = get_name(child)
+        assert child_name == "line"
+        res = eval_line(child, env)
+    return res
+
