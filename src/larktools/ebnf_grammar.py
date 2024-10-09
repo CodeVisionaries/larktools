@@ -15,7 +15,7 @@ grammar = """
 
   start: assign_var
 
-  assign_var: VARNAME "=" multi_lines
+  assign_var: VARNAME "=" multi_line_block
 
   VARNAME: LETTER (LETTER | DIGIT)*
 
@@ -24,8 +24,8 @@ grammar = """
   // but without the fancy tree shaping directives explained at 
   // https://lark-parser.readthedocs.io/en/stable/tree_construction.html
 
-  multi_lines: arith_expr | composed_lines
-  composed_lines: arith_expr _NL multi_lines
+  multi_line_block: arith_expr | composed_lines | _NL* multi_line_block _NL*
+  composed_lines:  arith_expr _NL multi_line_block
 
   arith_expr: sum
   sum: product | addition | subtraction 
