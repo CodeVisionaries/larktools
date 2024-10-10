@@ -15,7 +15,7 @@ grammar = """
 
   start: assign_var
 
-  assign_var: VARNAME "=" multi_line_block
+  assign_var: VARNAME "=" arith_expr
 
   VARNAME: LETTER (LETTER | DIGIT)*
 
