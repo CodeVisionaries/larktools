@@ -33,7 +33,7 @@ grammar = """
   multiplication: product "*" atom
   division: product "/" atom
 
-  atom: INT | VARNAME | neg_atom | bracketed_arith_expr
+  atom: SIGNED_FLOAT | INT | VARNAME | neg_atom | bracketed_arith_expr
   neg_atom: "-" atom
   bracketed_arith_expr: "(" arith_expr ")"
 
@@ -43,6 +43,12 @@ grammar = """
 
   DIGIT: "0".."9"
   INT: DIGIT+
+  SIGNED_INT: ["+"|"-"] INT
+  DECIMAL: INT "." INT? | "." INT
+
+  _EXP: ("e"|"E") SIGNED_INT
+  FLOAT: INT _EXP | DECIMAL _EXP?
+  SIGNED_FLOAT: ["+"|"-"] FLOAT
 
   LCASE_LETTER: "a".."z"
   UCASE_LETTER: "A".."Z"
