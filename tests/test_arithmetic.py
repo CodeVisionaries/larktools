@@ -10,10 +10,9 @@ from larktools.evaluation import eval_arith_expr
 class ArithParser:
     def __init__(self):
         self.parser = Lark(grammar, parser="lalr", start="arith_expr")
-        self.parse = self.parser.parse
 
     def parse_and_eval(self, expression: str, env: Optional[dict] = None) -> Union[int, float]:
-        tree = self.parse(expression)
+        tree = self.parser.parse(expression)
         res = eval_arith_expr(tree, {} if env is None else env)
         return res
 
@@ -26,6 +25,7 @@ def _parse_and_assert(expression: str, expected: Union[int, float], env: Optiona
 def test_integer_addition():
     _parse_and_assert("3 + 5", 8)
     _parse_and_assert("5 + 3", 8)
+    _parse_and_assert("5 + 3 + 1", 9)
     _parse_and_assert("9999999999999999 + 555555555555555", 10555555555555554)
 
 def test_integer_addition_neg():
