@@ -85,6 +85,8 @@ def eval_atom(node, env):
     child_name = get_name(child)
     if child_name == "INT":
         return int(get_value(child))
+    elif child_name == "SIGNED_FLOAT":
+        return float(get_value(child))
     elif child_name == "variable":
         return eval_variable(child, env)
     elif child_name == "neg_atom":
