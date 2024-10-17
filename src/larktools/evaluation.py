@@ -117,6 +117,8 @@ def eval_line(node, env):
     child_name = get_name(child)
     if child_name == "arith_expr":
         return eval_arith_expr(child, env)
+    elif child_name == "assignment":
+        return eval_assignment(child, env)
 
 def eval_multi_line_block(node, env):
     # this can be either an arithmetic expression or 
@@ -127,6 +129,18 @@ def eval_multi_line_block(node, env):
         assert child_name == "line"
         res = eval_line(child, env)
     return res
+
+
+def eval_assignment(node, env):
+    # assign result of an expression to a variable
+    child1, child2 = get_children(node)[0:2]
+    assert get_name(child1) == "VARNAME"
+    assert get_name(child2) == "arith_expr"
+
+    varname = get_value(child1)
+    env[varname] = eval_arith_expr(child2, env)
+    return env[varname]
+
 
 def eval_variable(node, env):
     children = get_children(node)
