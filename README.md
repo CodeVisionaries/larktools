@@ -16,3 +16,7 @@ To run the test suite, `pytest` is recommended, and can be done via:
 ```bash
 pytest -v --maxfail=1 larktools/tests/test_suite.py
 ```
+
+### Debugging
+
+For grammar development using an alternative, less optimized parsing strategy can help avoiding rule conflicts: Use `earley` instead of `lalr`

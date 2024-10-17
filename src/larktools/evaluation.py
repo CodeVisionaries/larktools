@@ -111,6 +111,22 @@ def eval_bracketed_arith_expr(node, env):
     assert get_name(child) == "arith_expr"
     return eval_arith_expr(child, env)
 
+def eval_line(node, env):
+    # this is the content of a single line of input
+    child = get_children(node)[0]
+    child_name = get_name(child)
+    if child_name == "arith_expr":
+        return eval_arith_expr(child, env)
+
+def eval_multi_line_block(node, env):
+    # this can be either an arithmetic expression or 
+    # composed lines
+    children = get_children(node)
+    for child in children:
+        child_name = get_name(child)
+        assert child_name == "line"
+        res = eval_line(child, env)
+    return res
 
 def eval_variable(node, env):
     children = get_children(node)
