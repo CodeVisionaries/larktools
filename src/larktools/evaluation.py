@@ -85,6 +85,8 @@ def eval_atom(node, env):
     child_name = get_name(child)
     if child_name == "INT":
         return int(get_value(child))
+    elif child_name == "SIGNED_FLOAT":
+        return float(get_value(child))
     elif child_name == "variable":
         return eval_variable(child, env)
     elif child_name == "neg_atom":
@@ -128,6 +130,7 @@ def eval_multi_line_block(node, env):
         res = eval_line(child, env)
     return res
 
+
 def eval_assignment(node, env):
     # assign result of an expression to a variable
     child1, child2 = get_children(node)[0:2]
@@ -137,6 +140,7 @@ def eval_assignment(node, env):
     varname = get_value(child1)
     env[varname] = eval_arith_expr(child2, env)
     return env[varname]
+
 
 def eval_variable(node, env):
     children = get_children(node)
