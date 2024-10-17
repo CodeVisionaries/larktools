@@ -16,7 +16,9 @@ grammar = """
   start: multi_line_block
 
 
+  variable: VARNAME ("[" INDEX "]")*
   VARNAME: LETTER (LETTER | DIGIT)*
+  INDEX: INT
 
   // Adopted from the calculator example at
   // https://lark-parser.readthedocs.io/en/stable/examples/calc.html 
@@ -39,7 +41,7 @@ grammar = """
   multiplication: product "*" atom
   division: product "/" atom
 
-  atom: INT | VARNAME | neg_atom | bracketed_arith_expr
+  atom: INT | variable | neg_atom | bracketed_arith_expr
   neg_atom: "-" atom
   bracketed_arith_expr: "(" arith_expr ")"
 
