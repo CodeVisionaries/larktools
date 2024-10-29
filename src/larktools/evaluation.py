@@ -153,3 +153,117 @@ def eval_variable(node, env):
             idx = int(get_value(ch))
             value = value[idx]
     return value
+
+def eval_logic_expr(node, env):
+    child = get_children(node)[0]
+    child_name = get_name(child)
+    if child_name == 'logic_state':
+        return eval_logic_state(child, env)
+    if child_name == 'logic_operation':
+        return eval_logic_operation(child, env)
+    if child_name == 'logic_comparison':
+        return eval_logic_comparison(child, env)
+    raise ValueError('Unexpected child name')
+
+def eval_logic_state(node,env):
+    child = get_children(node)[0]
+    child_name = get_name(child)
+    if child_name == 'BOOLEAN':
+        value = get_value(child)
+        if value == 'True':
+            return True
+        if value == 'False':
+            return False
+    if child_name == 'variable':
+        return eval_variable(child, env)
+    
+def eval_logic_operation(node, env):
+    child = get_children(node)[0]
+    child_name = get_name(child)
+    if child_name == 'logic_and':
+        return eval_logic_and(child, env)
+    if child_name == 'logic_or':
+        return eval_logic_or(child, env)
+    if child_name == 'logic_not':
+        return eval_logic_not(child, env)
+
+def eval_logic_and(node, env):
+    child1, child2 = get_children(node)
+    assert get_name(child1) == 'logic_expr'
+    assert get_name(child2) == 'logic_state'
+
+    return eval_logic_expr(child1, env) & eval_logic_state(child2, env)
+
+def eval_logic_or(node, env):
+    child1, child2 = get_children(node)
+    assert get_name(child1) == 'logic_expr'
+    assert get_name(child2) == 'logic_state'
+
+    return eval_logic_expr(child1, env) | eval_logic_state(child2, env)
+
+def eval_logic_not(node, env):
+    child = get_children(node)[0]
+    assert get_name(child) == 'logic_expr'
+
+    return not eval_logic_expr(child, env)
+
+def eval_logic_comparison(node, env):
+    child = get_children(node)[0]
+    child_name = get_name(child)
+
+    if child_name == 'logic_greater_than':
+        return eval_logic_greater_than(child, env)
+    if child_name == 'logic_greater_equal':
+        return eval_logic_greater_equal(child, env)
+    if child_name == 'logic_equal':
+        return eval_logic_equal(child, env)
+    if child_name == 'logic_smaller_equal':
+        return eval_logic_smaller_equal(child, env)
+    if child_name == 'logic_smaller_than':
+        return eval_logic_smaller_than(child, env)
+    if child_name == 'logic_unequal':
+        return eval_logic_unequal(child, env)
+    
+def eval_logic_greater_than(node, env):
+    child1, child2 = get_children(node)
+    assert get_name(child1) == 'arith_expr'
+    assert get_name(child2) == 'arith_expr'
+
+    return eval_arith_expr(child1, env) > eval_arith_expr(child2, env)
+
+    
+def eval_logic_greater_equal(node, env):
+    child1, child2 = get_children(node)
+    assert get_name(child1) == 'arith_expr'
+    assert get_name(child2) == 'arith_expr'
+
+    return eval_arith_expr(child1, env) >= eval_arith_expr(child2, env)
+
+    
+def eval_logic_equal(node, env):
+    child1, child2 = get_children(node)
+    assert get_name(child1) == 'arith_expr'
+    assert get_name(child2) == 'arith_expr'
+
+    return eval_arith_expr(child1, env) == eval_arith_expr(child2, env)
+    
+def eval_logic_smaller_equal(node, env):
+    child1, child2 = get_children(node)
+    assert get_name(child1) == 'arith_expr'
+    assert get_name(child2) == 'arith_expr'
+
+    return eval_arith_expr(child1, env) <= eval_arith_expr(child2, env)
+
+def eval_logic_smaller_than(node, env):
+    child1, child2 = get_children(node)
+    assert get_name(child1) == 'arith_expr'
+    assert get_name(child2) == 'arith_expr'
+
+    return eval_arith_expr(child1, env) <= eval_arith_expr(child2, env)
+    
+def eval_logic_unequal(node, env):
+    child1, child2 = get_children(node)
+    assert get_name(child1) == 'arith_expr'
+    assert get_name(child2) == 'arith_expr'
+
+    return eval_arith_expr(child1, env) != eval_arith_expr(child2, env)
