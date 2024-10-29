@@ -15,7 +15,7 @@ grammar = """
 
   start: assign_var
 
-  assign_var: VARNAME "=" arith_expr 
+  assign_var: VARNAME "=" arith_expr
 
   variable: VARNAME ("[" INDEX "]")*
   VARNAME: LETTER (LETTER | DIGIT)*
@@ -26,6 +26,11 @@ grammar = """
   // but without the fancy tree shaping directives explained at 
   // https://lark-parser.readthedocs.io/en/stable/tree_construction.html
 
+  
+  line: arith_expr
+
+  multi_line_block: (line _NL? | _NL )* 
+
   arith_expr: sum
   sum: product | addition | subtraction 
   addition: sum "+" product
@@ -35,7 +40,7 @@ grammar = """
   multiplication: product "*" atom
   division: product "/" atom
 
-  atom: INT | variable | neg_atom | bracketed_arith_expr
+  atom: SIGNED_FLOAT | INT | variable | neg_atom | bracketed_arith_expr
   neg_atom: "-" atom
   bracketed_arith_expr: "(" arith_expr ")"
 
@@ -45,6 +50,12 @@ grammar = """
 
   DIGIT: "0".."9"
   INT: DIGIT+
+  SIGNED_INT: ["+"|"-"] INT
+  DECIMAL: INT "." INT? | "." INT
+
+  _EXP: ("e"|"E") SIGNED_INT
+  FLOAT: INT _EXP | DECIMAL _EXP?
+  SIGNED_FLOAT: ["+"|"-"] FLOAT
 
   LCASE_LETTER: "a".."z"
   UCASE_LETTER: "A".."Z"
@@ -57,4 +68,5 @@ grammar = """
 
   %import common.WS_INLINE
   %ignore WS_INLINE
+  %import common.NEWLINE -> _NL
 """

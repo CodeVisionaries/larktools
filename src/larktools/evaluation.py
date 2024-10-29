@@ -60,7 +60,7 @@ class MappedOperator:
 
         func = self._mappings.get(child_name)
         # better to raise exception here or have default function?
-        assert func is not None
+        assert func is not None, f"{child_name} cannot be mapped"
 
         res = func(child, env)
         return res
@@ -112,6 +112,55 @@ def eval_division(node, env):
     return op(node, env)
 
 
+def eval_atom(node, env):
+    child = get_children(node)[0]
+    child_name = get_name(child)
+    if child_name == "INT":
+        return int(get_value(child))
+    elif child_name == "SIGNED_FLOAT":
+        return float(get_value(child))
+    elif child_name == "variable":
+        return eval_variable(child, env)
+    elif child_name == "neg_atom":
+        return eval_neg_atom(child, env)
+    elif child_name == "bracketed_arith_expr":
+        return eval_bracketed_arith_expr(child, env)
+
+
+def eval_neg_atom(node, env):
+    # the "-" character appearing in the production rule is
+    # filtered out by lark by default because it is a constant
+    # character. Therefore, it doesn't appear among the child nodes
+    child = get_children(node)[0]
+    assert get_name(child) == "atom"
+    return (-eval_atom(child, env))
+
+
+def eval_bracketed_arith_expr(node, env):
+    # same here, the constant characters "(" and ")"
+    # are filtered out and don't appear as child nodes
+    child = get_children(node)[0]
+    assert get_name(child) == "arith_expr"
+    return eval_arith_expr(child, env)
+
+
+def eval_line(node, env):
+    # this is the content of a single line of input
+    child = get_children(node)[0]
+    child_name = get_name(child)
+    if child_name == "arith_expr":
+        return eval_arith_expr(child, env)
+
+def eval_multi_line_block(node, env):
+    # this can be either an arithmetic expression or 
+    # composed lines
+    children = get_children(node)
+    for child in children:
+        child_name = get_name(child)
+        assert child_name == "line"
+        res = eval_line(child, env)
+    return res
+
 def eval_variable(node, env):
     children = get_children(node)
     assert get_name(children[0]) == "VARNAME"
@@ -135,6 +184,7 @@ EVAL_MAPPINGS = {
     "multiplication": eval_multiplication,
     "division": eval_division,
     "INT": lambda child, env: int(get_value(child)),
+    "SIGNED_FLOAT": lambda child, env: float(get_value(child)),
     "variable": eval_variable,
     "neg_atom": lambda node, env: -eval_map(node, env),
     "bracketed_arith_expr": eval_map,
