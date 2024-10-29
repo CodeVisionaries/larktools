@@ -4,7 +4,7 @@ from typing import Optional, Union
 from lark import Lark
 
 from larktools.ebnf_grammar import grammar
-from larktools.evaluation import eval_arith_expr
+from larktools.evaluation import instantiate_eval_tree
 
 
 class ArithParser:
@@ -13,7 +13,8 @@ class ArithParser:
 
     def parse_and_eval(self, expression: str, env: Optional[dict] = None) -> Union[int, float]:
         tree = self.parser.parse(expression)
-        res = eval_arith_expr(tree, {} if env is None else env)
+        eval_tree = instantiate_eval_tree(tree)
+        res = eval_tree({} if env is None else env)
         return res
 
 
