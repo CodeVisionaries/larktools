@@ -19,9 +19,9 @@ class SyntaxParser:
         return res
 
 
-def _parse_and_assert(expression: str, expected: Union[int, float]) -> None:
+def _parse_and_assert(expression: str, expected: Union[int, float], env: Optional[Union[None, dict]] = None) -> None:
     parser = SyntaxParser()
-    res = parser.parse_and_eval(expression)
+    res = parser.parse_and_eval(expression, env)
     assert expected == res
 
 def test_multi_line():
@@ -30,4 +30,25 @@ def test_multi_line():
     _parse_and_assert("8\n\n\n", 8)
     _parse_and_assert("5+5\n3+4\n1+2", 3)
     _parse_and_assert("\n\n5\n\n3\n8", 8)
+
+
+def test_assignment():
+    _parse_and_assert("a=5", 5)
+    _parse_and_assert("z=1+2+3", 6)
+    _parse_and_assert("y=(1+2+3)", 6)
+
+def test_assignment_env_variable():
+    # check env variables is set
+    env = {"a":1}
+    _parse_and_assert("a=3", 3, env=env)
+    assert env["a"] == 3
+
+    _parse_and_assert("y = x + 3", 20, env={"x":17, "i":123})
+    _parse_and_assert("y = x + i", 20, env={"x":17, "i":3})
+
+def test_assign_multiline():
+    _parse_and_assert("x=3 \n y=4 \n z=x+y",7)
+    _parse_and_assert("x=1 \n z = x + y", 3, env={"y":2})
+
+
 

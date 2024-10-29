@@ -53,7 +53,11 @@ class AssignNode:
         self._expr = instantiate_eval_tree(lark_node.children[1])
 
     def __call__(self, env):
-        env[self._varname] = self._expr(env)
+        rhs = self._expr(env)
+        env[self._varname] = rhs
+        # TODO: Should the full assignment evaluate to the expression on rhs?
+        #       At the moment necessary to satisy some test assumptions.
+        return rhs
 
 
 class VariableNode:
@@ -117,6 +121,7 @@ class BinaryOperatorNode(MappedOperatorNode):
 
 NODE_MAP = {
     RootNode: ("multi_line_block",),
+    AssignNode: ("assignment",),
     UnaryOperatorNode: ("neg_atom",),
     BinaryOperatorNode: ("addition", "subtraction", "multiplication", "division"),
     VariableNode: ("variable", "varname"),
