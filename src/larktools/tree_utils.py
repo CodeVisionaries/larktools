@@ -28,6 +28,11 @@ def get_children(node):
     """Get a list of children from a rule node."""
     return node.children
 
+def get_first_child(node):
+    """Get the first child from a rule node."""
+    children = get_children(node)
+    assert len(children) > 0
+    return children[0]
 
 def get_value(node):
     """Get the value associated with a terminal node."""

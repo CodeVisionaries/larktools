@@ -4,7 +4,7 @@ from typing import Optional, Union
 from lark import Lark
 
 from larktools.ebnf_grammar import grammar
-from larktools.evaluation import eval_multi_line_block
+from larktools.evaluation import instantiate_eval_tree
 
 
 class SyntaxParser:
@@ -14,7 +14,8 @@ class SyntaxParser:
 
     def parse_and_eval(self, expression: str, env: Optional[Union[None, dict]] = None) -> Union[int, float]:
         tree = self.parse(expression)
-        res = eval_multi_line_block(tree, {} if env is None else env)
+        eval_tree = instantiate_eval_tree(tree)
+        res = eval_tree({} if env is None else env)
         return res
 
 
