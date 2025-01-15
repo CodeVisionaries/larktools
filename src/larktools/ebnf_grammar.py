@@ -30,7 +30,24 @@ grammar = """
 
   assignment: VARNAME "=" arith_expr
 
+  logic_expr: logic_state | logic_operation | logic_comparison # removing logic_comparison here will make other logic tests succeed.
 
+  logic_state: BOOLEAN
+
+  logic_operation: logic_and | logic_or | logic_not
+  logic_and: logic_expr "and" logic_state
+  logic_or: logic_expr "or" logic_state
+  logic_not: "not" logic_expr
+
+  logic_comparison: logic_greater_than | logic_greater_equal | logic_equal | logic_smaller_equal | logic_smaller_than | logic_unequal
+  logic_greater_than: arith_expr ">" arith_expr
+  logic_greater_equal: arith_expr ">=" arith_expr
+  logic_equal: arith_expr "==" arith_expr
+  logic_smaller_equal: arith_expr "<=" arith_expr
+  logic_smaller_than: arith_expr "<" arith_expr
+  logic_unequal: arith_expr "!=" arith_expr
+  
+  
   arith_expr: sum
   sum: product | addition | subtraction 
   addition: sum "+" product
@@ -53,6 +70,7 @@ grammar = """
   SIGNED_INT: ["+"|"-"] INT
   DECIMAL: INT "." INT? | "." INT
 
+
   _EXP: ("e"|"E") SIGNED_INT
   FLOAT: INT _EXP | DECIMAL _EXP?
   SIGNED_FLOAT: ["+"|"-"] FLOAT
@@ -62,6 +80,8 @@ grammar = """
 
   LETTER: UCASE_LETTER | LCASE_LETTER
   WORD: LETTER+
+
+  BOOLEAN: "True" | "False"
 
   // Whitespace characters are filtered out before parsing.
   // However, linebreaks are preserved. 

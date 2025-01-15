@@ -77,9 +77,12 @@ class VariableNode:
 class NumberNode:
     def __init__(self, lark_node):
         node_name = get_name(lark_node)
-        self._value = {
-            "SIGNED_FLOAT": float, "INT": int, "INDEX": int,
-        }[node_name](get_value(lark_node))
+        op_map = {            
+            "SIGNED_FLOAT": float,
+            "INT": int, 
+            "INDEX": int,
+            "BOOLEAN": lambda x: True if x == "True" else (False if x == "False" else None)}
+        self._value = op_map[node_name](get_value(lark_node))
 
     def __call__(self, env):
         return self._value
@@ -102,7 +105,8 @@ class UnaryOperatorNode(MappedOperatorNode):
     def __init__(self, lark_node):
         super().__init__(
             lark_node,
-            op_map={"neg_atom": lambda x: -x[0]}
+            op_map={"neg_atom": lambda x: -x[0],
+                    "logic_not": lambda x: not x[0]}
         )
 
 
@@ -115,6 +119,14 @@ class BinaryOperatorNode(MappedOperatorNode):
                 "subtraction": lambda x: x[0] - x[1],
                 "multiplication": lambda x: x[0] * x[1],
                 "division": lambda x: x[0] / x[1],
+                "logic_and": lambda x: bool(x[0]) and bool(x[1]),
+                "logic_or": lambda x: x[0] or x[1],
+                "logic_greater_than": lambda x: x[0] > x[1],
+                "logic_greater_equal": lambda x: x[0] >= x[1],
+                "logic_equal": lambda x: x[0] == x[1],
+                "logic_smaller_equal": lambda x: x[0] <= x[1],
+                "logic_smaller_than": lambda x: x[0] < x[1],
+                "logic_unequal": lambda x: x[0] != x[1]
             }
         )
 
@@ -122,10 +134,13 @@ class BinaryOperatorNode(MappedOperatorNode):
 NODE_MAP = {
     RootNode: ("multi_line_block",),
     AssignNode: ("assignment",),
-    UnaryOperatorNode: ("neg_atom",),
-    BinaryOperatorNode: ("addition", "subtraction", "multiplication", "division"),
+    UnaryOperatorNode: ("neg_atom", "logic_not"),
+    BinaryOperatorNode: ("addition", "subtraction", "multiplication", "division", 
+                         "logic_and", "logic_or",
+                          "logic_greater_than","logic_greater_equal","logic_equal", 
+                          "logic_smaller_equal","logic_smaller_than","logic_unequal"),
     VariableNode: ("variable", "varname"),
-    NumberNode: ("INT", "SIGNED_INT", "FLOAT", "SIGNED_FLOAT", "INDEX"),
+    NumberNode: ("INT", "SIGNED_INT", "FLOAT", "SIGNED_FLOAT", "INDEX", "BOOLEAN"),
 }
 
 INV_NODE_MAP = {k: v for v in NODE_MAP for k in NODE_MAP[v]}
